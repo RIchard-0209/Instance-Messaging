@@ -149,7 +149,8 @@ void HttpConnection::HandleReq() {
 
 	// ´¦ÀígetÇëÇó
 	if (_request.method() == http::verb::get) {
-		bool success = LogicSystem::GetInstance()->HandleGet(_request.target(), shared_from_this());
+		PreParseGetParam();
+		bool success = LogicSystem::GetInstance()->HandleGet(_get_url, shared_from_this());
 
 		if (!success) {
 			_response.result(http::status::not_found);

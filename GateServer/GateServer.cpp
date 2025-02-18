@@ -21,6 +21,7 @@ int main()
 
 			});
 		std::make_shared<CServer>(ioc, port)->Run();
+		std::cout << "GateServer is open, the port is 8080\n";
 		ioc.run();
 	}
 
