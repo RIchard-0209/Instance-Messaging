@@ -1,5 +1,6 @@
 #include "registerdialog.h"
 #include "ui_registerdialog.h"
+#include <QRegularExpression>
 #include "global.h"
 #include "httpmgr.h"
 
@@ -19,7 +20,7 @@ RegisterDialog::RegisterDialog(QWidget *parent)
     ui->err_tip->setProperty("state", "normal");
     repolish(ui->err_tip);
 
-    connect(HttpMgr::GetInstance().get(), &HttpMgr::sign_reg_mod_finsih, this, &RegisterDialog::slot_reg_mod_finish);
+    connect(HttpMgr::GetInstance().get(), &HttpMgr::sign_reg_mod_finish, this, &RegisterDialog::slot_reg_mod_finish);
 
     initHttpHandlers();
 }
@@ -37,6 +38,10 @@ void RegisterDialog::on_varify_btn_clicked()
 
     if (match) {
         // 发送http验证码
+        QJsonObject json_obj;
+        json_obj["email"] = email;
+        HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/get_varifycode"),
+                                            json_obj, ReqId::ID_GET_VARIFY_CODE,Modules::REGISTERMOD);
     } else {
         showTip(tr("邮箱地址不正确"), false);
     }
@@ -52,7 +57,7 @@ void RegisterDialog::slot_reg_mod_finish(ReqId id, QString res, ErrorCodes err)
 
     // 解析JSon字符串， res 转化为QByteArray
     QJsonDocument jsonDoc = QJsonDocument::fromJson(res.toUtf8());
-    if (jsonDoc.isNull() || jsonDoc.isObject()) {
+    if (jsonDoc.isNull() || !jsonDoc.isObject()) {
         showTip(tr("json解析失败"), false);
         return ;
     }

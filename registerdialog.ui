@@ -283,7 +283,7 @@
           </size>
          </property>
          <property name="text">
-          <string>刷新</string>
+          <string>获取</string>
          </property>
         </widget>
        </item>
