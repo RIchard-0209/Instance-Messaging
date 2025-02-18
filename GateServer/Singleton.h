@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef SINGLETON_H
-#define SINGLENTON_H
+#define SINGLETON_H
 
 #include <iostream>
 #include <memory>
