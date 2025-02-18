@@ -1,6 +1,5 @@
 #pragma once
 
-
 #ifndef SINGLETON_H
 #define SINGLENTON_H
 
@@ -33,11 +32,9 @@ protected:
 	Singleton& operator=(const Singleton<T>&) = delete;
 
 	static std::shared_ptr<T> _instance;
-
 };
 
 template<typename T>
 std::shared_ptr<T> Singleton<T>::_instance = nullptr;
-
 
 #endif // !SINGLETON_H

@@ -1,11 +1,9 @@
 #include "CServer.h"
 #include "HttpConnection.h"
 
-CServer::CServer(boost::asio::io_context& ioc, unsigned short& port) : 
+CServer::CServer(boost::asio::io_context& ioc, unsigned short& port) :
 	_ioc(ioc), _acceptor(ioc, tcp::endpoint(tcp::v4(), port)), _socket(ioc) {
-
 }
-
 
 void CServer::Run() {
 	auto self = shared_from_this();
@@ -18,7 +16,6 @@ void CServer::Run() {
 				return;
 			}
 
-
 			// 创建新连接，并创建HttpConnection类管理这个连接
 			std::make_shared<HttpConnection>(std::move(self->_socket))->Run();
 
@@ -27,9 +24,6 @@ void CServer::Run() {
 		}
 		catch (std::exception& e) {
 			//std::cerr << "accept error: " << e.what() << std::endl;
-
-
 		}
 		});
-
 }
