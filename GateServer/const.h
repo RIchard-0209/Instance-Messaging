@@ -7,6 +7,8 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 
+#include "hiredis.h"
+
 #include <json/json.h>
 #include <json/value.h>
 #include <json/reader.h>
