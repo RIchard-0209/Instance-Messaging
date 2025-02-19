@@ -28,6 +28,10 @@ struct SectionInfo {
 	}
 };
 
+
+/* 
+	因为在main函数中定义了这个，大部分都需要用到所以制作成单例的方式
+*/
 class ConfigMgr {
 public:
 	~ConfigMgr() {
@@ -41,7 +45,10 @@ public:
 		return _config_map[key];
 	}
 
-	ConfigMgr();
+	static ConfigMgr& GetInstance() {
+		static ConfigMgr cfg_mgr;
+		return cfg_mgr;
+	}
 
 	ConfigMgr(const ConfigMgr& other) {
 		_config_map = other._config_map;
@@ -58,6 +65,6 @@ public:
 private:
 	std::map<std::string, SectionInfo> _config_map;
 
-
+	ConfigMgr();
 };
 

@@ -17,8 +17,11 @@
 #include <map>
 #include <unordered_map>
 #include <string>
-
-
+#include <vector>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
 
 #include "Singleton.h"
 
@@ -32,7 +35,3 @@ enum ErrorCodes {
 	Error_Json = 1001,
 	RPCFailed = 1002,
 };
-
-
-class ConfigMgr;
-extern ConfigMgr g_config_mgr;

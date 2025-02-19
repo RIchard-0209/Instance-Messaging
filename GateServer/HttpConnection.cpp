@@ -2,7 +2,11 @@
 #include "LogicSystem.h"
 
 // socket没有赋值构造，只有移动构造
-HttpConnection::HttpConnection(tcp::socket socket) : _socket(std::move(socket)) {
+//HttpConnection::HttpConnection(tcp::socket socket) : _socket(std::move(socket)) {
+//}
+
+HttpConnection::HttpConnection(boost::asio::io_context& ioc) : _socket(ioc)
+{
 }
 
 void HttpConnection::Run() {
@@ -22,6 +26,11 @@ void HttpConnection::Run() {
 			std::cout << "exception is " << e.what() << std::endl;
 		}
 		});
+}
+
+tcp::socket& HttpConnection::GetSocket()
+{
+	return _socket;
 }
 
 void HttpConnection::CheckDeadline() {
@@ -166,8 +175,7 @@ void HttpConnection::HandleReq() {
 		return;
 	}
 
-
-	// 处理post请求 
+	// 处理post请求
 	if (_request.method() == http::verb::post) {
 		bool success = LogicSystem::GetInstance()->HandlePost(_request.target(), shared_from_this());
 
