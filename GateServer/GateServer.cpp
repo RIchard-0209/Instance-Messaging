@@ -105,8 +105,8 @@ void TestRedis() {
 }
 
 void TestRedisMgr() {
-	assert(RedisMgr::GetInstance()->Connect("127.0.0.1", 6380));
-	assert(RedisMgr::GetInstance()->Auth("123456"));
+	//assert(RedisMgr::GetInstance()->Connect("127.0.0.1", 6380));
+	//assert(RedisMgr::GetInstance()->Auth("123456"));
 	assert(RedisMgr::GetInstance()->Set("blogwebsite", "rein.club"));
 	std::string value = "";
 	assert(RedisMgr::GetInstance()->Get("blogwebsite", value));
@@ -124,7 +124,7 @@ void TestRedisMgr() {
 	assert(RedisMgr::GetInstance()->RPop("lpushkey1", value));
 	assert(RedisMgr::GetInstance()->LPop("lpushkey1", value));
 	assert(RedisMgr::GetInstance()->LPop("lpushkey2", value) == false);
-	RedisMgr::GetInstance()->Close();
+	//RedisMgr::GetInstance()->Close();
 }
 
 int main()

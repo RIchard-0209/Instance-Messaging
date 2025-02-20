@@ -2,6 +2,7 @@
 
 #include "const.h"
 #include "Singleton.h"
+#include "RedisConPool.h"
 
 class RedisMgr : public Singleton<RedisMgr>,
 	public std::enable_shared_from_this<RedisMgr>
@@ -26,6 +27,8 @@ public:
 private:
 	RedisMgr();
 
-	redisContext* _connect;
-	redisReply* _reply;
+	//redisContext* _connect;
+	//redisReply* _reply;
+
+	std::unique_ptr<RedisConPool> _con_pool;
 };
