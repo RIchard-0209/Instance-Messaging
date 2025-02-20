@@ -47,4 +47,16 @@ enum ErrorCodes {
 };
 
 
+// Defer 类
+class Defer {
+public:
+	// 接受一个lambda表达式或函数指针
+	Defer(std::function<void()> func) : _func(func) {}
+
+	~Defer() { _func(); }
+
+private:
+	std::function<void()> _func;
+};
+
 #define CODEPREFIX "code_"
