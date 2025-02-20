@@ -82,6 +82,7 @@ MySqlPool::MySqlPool(const std::string& url, const std::string& user, const std:
 	try {
 		for (int i = 0; i < poolSize; ++i) {
 			sql::mysql::MySQL_Driver* driver = sql::mysql::get_mysql_driver_instance();
+			std::cout << "url is " << url << " user is " << user << " passwd is " << passwd << std::endl;
 			auto* conn(driver->connect(url, user, passwd));
 			conn->setSchema(schema);
 			
@@ -90,7 +91,6 @@ MySqlPool::MySqlPool(const std::string& url, const std::string& user, const std:
 			// ×ª»»ÎªÃë
 			long long time_stamp = std::chrono::duration_cast<std::chrono::seconds>(currentTime).count();
 
-			
 			_pool.push(std::make_unique<sqlConnection>(conn, time_stamp));
 		}
 

@@ -36,7 +36,6 @@ public:
 	void checkConnection();
 	void Close();
 
-
 private:
 
 	std::string _url;
