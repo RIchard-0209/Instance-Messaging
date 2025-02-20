@@ -36,4 +36,15 @@ enum ErrorCodes {
 	Success = 0,
 	Error_Json = 1001,
 	RPCFailed = 1002,
+	VarifyExpired = 1003,		// 验证码过期
+	VarifyError = 1004,			// 验证码错误
+	UserExist = 1005,			// 用户已存在
+	PasswdError = 1006,			// 密码错误
+	EmailNotMatch = 1007,		// 邮箱不匹配
+	PasswdUpFailed = 1008,		// 密码修改失败
+	PasswdInvalid = 1009,		// 密码不合法
+
 };
+
+
+#define CODEPREFIX "code_"
