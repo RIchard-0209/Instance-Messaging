@@ -21,6 +21,8 @@
 
 
 extern std::function<void(QWidget*)> repolish;
+extern QString encrypt(const QString& str);
+
 
 enum ReqId {
     ID_GET_VARIFY_CODE = 1001, // 获取验证码
@@ -36,6 +38,17 @@ enum ErrorCodes {
     SUCCESS = 0,
     ERR_JSON = 1, // json 解析失败
     ERR_NETWORK = 2, // 网络错误
+};
+
+
+enum TipErr{
+    TIP_SUCCESS = 0,
+    TIP_EMAIL_ERR = 1,
+    TIP_PWD_ERR = 2,
+    TIP_CONFIRM_ERR = 3,
+    TIP_PWD_CONFIRM = 4,
+    TIP_VARIFY_ERR = 5,
+    TIP_USER_ERR = 6
 };
 
 extern QString gate_url_prefix;

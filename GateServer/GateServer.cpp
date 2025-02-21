@@ -7,7 +7,7 @@
 #include "ConfigMgr.h"
 #include "RedisMgr.h"
 
-
+#include "vld.h"
 void TestRedis() {
 	//连接redis 需要启动才可以进行连接
 //redis默认监听端口为6387 可以再配置文件中修改
