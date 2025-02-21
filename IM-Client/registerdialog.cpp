@@ -3,7 +3,7 @@
 
 
 #include <QRegularExpression>
-
+#include <QDebug>
 
 #include "global.h"
 #include "httpmgr.h"
@@ -13,13 +13,17 @@ RegisterDialog::RegisterDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::RegisterDialog)
 {
-    // 设置密码不显示
+
     ui->setupUi(this);
+
+    // // 进入用户注册设置focus
+    // ui->user_lineEdit->setFocus();
+    // 设置密码不显示
     ui->psw_lineEdit->setEchoMode(QLineEdit::Password);
-    ui->psw_confirm_lineEdit->setEchoMode(QLineEdit::Password);
-    /*
-     * PasswordEchoOnEdit输入状态的时候，是正常显示字符，输入结束后，隐藏
-     */
+    ui->psw_confirm_lineEdit->setEchoMode(QLineEdit::Password); // PasswordEchoOnEdit输入状态的时候，是正常显示字符，输入结束后，隐藏
+
+    ui->psw_lineEdit->setAttribute(Qt::WA_InputMethodEnabled, false);    //屏蔽输入法
+    ui->psw_confirm_lineEdit->setAttribute(Qt::WA_InputMethodEnabled, false);
 
     ui->err_tip->setProperty("state", "normal");
     repolish(ui->err_tip);
@@ -41,6 +45,10 @@ RegisterDialog::RegisterDialog(QWidget *parent)
         checkPassValid();
     });
 
+    connect(ui->psw_lineEdit, &QLineEdit::editingFinished, this, [this]() {
+        checkConfirmValid();
+    });
+
     connect(ui->psw_confirm_lineEdit, &QLineEdit::editingFinished, this, [this](){
         checkConfirmValid();
     });
@@ -52,6 +60,7 @@ RegisterDialog::RegisterDialog(QWidget *parent)
 
 RegisterDialog::~RegisterDialog()
 {
+    qDebug() << "RegisterDialog destructed";
     delete ui;
 }
 
@@ -70,7 +79,6 @@ void RegisterDialog::on_varify_btn_clicked()
     } else {
         showTip(tr("邮箱地址不正确"), false);
     }
-
 }
 
 void RegisterDialog::on_confirm_btn_clicked()
@@ -115,6 +123,14 @@ void RegisterDialog::on_confirm_btn_clicked()
     json_obj["varifycode"] = ui->varify_lineEdit->text();
     HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_register"),
                                         json_obj, ReqId::ID_REG_USER,Modules::REGISTERMOD);
+
+
+}
+
+void RegisterDialog::on_cancel_btn_clicked()
+{
+
+    emit sigSwitchLogin();
 }
 
 void RegisterDialog::slot_reg_mod_finish(ReqId id, QString res, ErrorCodes err)
@@ -130,7 +146,6 @@ void RegisterDialog::slot_reg_mod_finish(ReqId id, QString res, ErrorCodes err)
         showTip(tr("json解析失败"), false);
         return ;
     }
-
 
     _handlers[id](jsonDoc.object());
     return ;
@@ -160,12 +175,15 @@ void RegisterDialog::initHttpHandlers()
             return;
         }
         auto email = jsonObj["email"].toString();
-        showTip(tr("用户注册成功"), true);
-        qDebug() << "user uuid is " << jsonObj["uuid"].toString();
+        showTip(tr("用户注册成功，系统将自动返回"), true);
         qDebug() << "email is " << email ;
 
+        return_log_dlg();
     });
 }
+
+
+
 
 void RegisterDialog::showTip(QString str, bool b_state)
 {
@@ -245,18 +263,29 @@ bool RegisterDialog::checkConfirmValid()
     return true;
 }
 
+bool RegisterDialog::checkEmailValid() {
+    QString email = ui->mail_lineEdit->text().trimmed();
 
+    // 提前校验基础条件
+    if (email.isEmpty()) {
+        addTipErr(TipErr::TIP_EMAIL_ERR, tr("邮箱不能为空"));
+        return false;
+    }
+    if (email.length() > 320) {
+        addTipErr(TipErr::TIP_EMAIL_ERR, tr("邮箱地址过长"));
+        return false;
+    }
+    if (!email.contains('@')) {
+        addTipErr(TipErr::TIP_EMAIL_ERR, tr("邮箱必须包含@符号"));
+        return false;
+    }
 
+    const QRegularExpression emailRegex(
+        R"((\w+)(\.|_)?(\w*)@(\w+)(\.(\w+))+)"
+        );
 
-bool RegisterDialog::checkEmailValid()
-{
-    //验证邮箱的地址正则表达式
-    auto email = ui->mail_lineEdit->text();
-    // 邮箱地址的正则表达式
-    QRegularExpression regex(R"((\w+)(\.|_)?(\w*)@(\w+)(\.(\w+))+)");
-    bool match = regex.match(email).hasMatch(); // 执行正则表达式匹配
-    if(!match){
-        //提示邮箱不正确
+    QRegularExpressionMatch match = emailRegex.match(email);
+    if (!match.hasMatch()) {
         addTipErr(TipErr::TIP_EMAIL_ERR, tr("邮箱地址不正确"));
         return false;
     }
@@ -275,4 +304,12 @@ bool RegisterDialog::checkVarifyValid()
 
     delTipErr(TipErr::TIP_VARIFY_ERR);
     return true;
+}
+
+void RegisterDialog::return_log_dlg()
+{
+
+    QTimer::singleShot(3000, this, [this]() {
+        emit sigSwitchLogin();
+        });
 }

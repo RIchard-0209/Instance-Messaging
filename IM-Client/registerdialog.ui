@@ -195,7 +195,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QLabel" name="psw_comfirm_label">
+        <widget class="QLabel" name="psw_confirm_label">
          <property name="minimumSize">
           <size>
            <width>0</width>

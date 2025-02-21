@@ -32,8 +32,8 @@ public:
     ~MainWindow();
 
 public slots:
-    void SoltSwitchReg();
-
+    void SlotSwitchLog();
+    void SlotSwitchReg();
 private:
     Ui::MainWindow *ui;
     LoginDialog *_log_dlg;

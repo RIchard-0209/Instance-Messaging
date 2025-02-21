@@ -24,11 +24,17 @@ public slots:
 private slots:
     void on_varify_btn_clicked();
     void on_confirm_btn_clicked();
+    void on_cancel_btn_clicked();
+
+signals:
+    void sigSwitchLogin();
 
 private:
     Ui::RegisterDialog *ui;
     QMap<ReqId, std::function<void(const QJsonObject&)>> _handlers;
     QMap<TipErr, QString> _tip_errs;
+    // QTimer* _timer;
+    // int _countDown;
 
     void initHttpHandlers();
     void showTip(QString str, bool b_state);
@@ -39,6 +45,8 @@ private:
     bool checkPassValid();
     bool checkConfirmValid();
     bool checkVarifyValid();
+
+    void return_log_dlg();
 };
 
 #endif // REGISTERDIALOG_H
