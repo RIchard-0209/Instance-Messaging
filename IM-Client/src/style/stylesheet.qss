@@ -9,3 +9,37 @@ QDialog#LoginDialog #RegisterDialog {
 #err_tip[state='error'] {
     color: red
 }
+
+
+#pass_visible[state='unvisible']{
+   border-image: url(:/src/img/unvisible.png);
+}
+
+#pass_visible[state='unvisible_hover']{
+   border-image: url(:/src/img/unvisible_hover.png);
+}
+
+#pass_visible[state='visible']{
+   border-image: url(:/src/img/visible.png);
+}
+
+#pass_visible[state='visible_hover']{
+   border-image: url(:/src/img/visible_hover.png);
+}
+
+
+#confirm_visible[state='unvisible']{
+   border-image: url(:/src/img/unvisible.png);
+}
+
+#confirm_visible[state='unvisible_hover']{
+   border-image: url(:/src/img/unvisible_hover.png);
+}
+
+#confirm_visible[state='visible']{
+   border-image: url(:/src/img/visible.png);
+}
+
+#confirm_visible[state='visible_hover']{
+   border-image: url(:/src/img/visible_hover.png);
+}

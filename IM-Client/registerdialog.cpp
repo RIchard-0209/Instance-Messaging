@@ -4,9 +4,11 @@
 
 #include <QRegularExpression>
 #include <QDebug>
+#include <QLabel>
 
 #include "global.h"
 #include "httpmgr.h"
+#include "clickedlabel.h"
 
 
 RegisterDialog::RegisterDialog(QWidget *parent)
@@ -46,7 +48,8 @@ RegisterDialog::RegisterDialog(QWidget *parent)
     });
 
     connect(ui->psw_lineEdit, &QLineEdit::editingFinished, this, [this]() {
-        checkConfirmValid();
+        if (ui->psw_confirm_lineEdit->text().length() != 0)
+            checkConfirmValid();
     });
 
     connect(ui->psw_confirm_lineEdit, &QLineEdit::editingFinished, this, [this](){
@@ -56,6 +59,37 @@ RegisterDialog::RegisterDialog(QWidget *parent)
     connect(ui->varify_lineEdit, &QLineEdit::editingFinished, this, [this](){
         checkVarifyValid();
     });
+
+    //设置浮动显示手形状
+    ui->pass_visible->setCursor(Qt::PointingHandCursor);
+    ui->confirm_visible->setCursor(Qt::PointingHandCursor);
+
+    ui->pass_visible->SetState("unvisible","unvisible_hover","","visible",
+                               "visible_hover","");
+
+    ui->confirm_visible->SetState("unvisible","unvisible_hover","","visible",
+                                  "visible_hover","");
+    //连接点击事件
+    connect(ui->pass_visible, &ClickedLabel::clicked, this, [this]() {
+        auto state = ui->pass_visible->GetCurState();
+        if(state == ClickLbState::Normal){
+            ui->psw_lineEdit->setEchoMode(QLineEdit::Password);
+        }else{
+            ui->psw_lineEdit->setEchoMode(QLineEdit::Normal);
+        }
+        qDebug() << "Label was clicked!";
+    });
+
+    connect(ui->confirm_visible, &ClickedLabel::clicked, this, [this]() {
+        auto state = ui->confirm_visible->GetCurState();
+        if(state == ClickLbState::Normal){
+            ui->psw_confirm_lineEdit->setEchoMode(QLineEdit::Password);
+        }else{
+            ui->psw_confirm_lineEdit->setEchoMode(QLineEdit::Normal);
+        }
+        qDebug() << "Label was clicked!";
+    });
+
 }
 
 RegisterDialog::~RegisterDialog()

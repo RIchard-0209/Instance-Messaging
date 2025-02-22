@@ -34,6 +34,7 @@ public:
 public slots:
     void SlotSwitchLog();
     void SlotSwitchReg();
+
 private:
     Ui::MainWindow *ui;
     LoginDialog *_log_dlg;
