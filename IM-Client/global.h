@@ -27,10 +27,12 @@ extern QString encrypt(const QString& str);
 enum ReqId {
     ID_GET_VARIFY_CODE = 1001, // 获取验证码
     ID_REG_USER = 1002,
+    ID_RESET_PWD = 1003
 };
 
 enum Modules {
     REGISTERMOD = 0,
+    RESETMOD = 1
 };
 
 // 有些公司不会把错误码发给用户，防止用户爆破

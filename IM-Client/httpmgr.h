@@ -39,6 +39,7 @@ signals:
     void sign_http_finish(ReqId id, QString res, ErrorCodes err, Modules mod);
     //注册模块http相关请求完成发送此信号
     void sign_reg_mod_finish(ReqId id, QString res, ErrorCodes err);
+    void sig_reset_mod_finish(ReqId id, QString res, ErrorCodes err);
 };
 
 #endif // HTTPMGR_H

@@ -37,7 +37,7 @@ enum ErrorCodes {
 	Error_Json = 1001,
 	RPCFailed = 1002,
 	VarifyExpired = 1003,		// 验证码过期
-	VarifyError = 1004,			// 验证码错误
+	VarifyCodeErr = 1004,			// 验证码错误
 	UserExist = 1005,			// 用户已存在
 	PasswdError = 1006,			// 密码错误
 	EmailNotMatch = 1007,		// 邮箱不匹配

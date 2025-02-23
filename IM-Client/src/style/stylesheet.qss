@@ -43,3 +43,11 @@ QDialog#LoginDialog #RegisterDialog {
 #confirm_visible[state='visible_hover']{
    border-image: url(:/src/img/visible_hover.png);
 }
+
+#forget_label[state='normal'], #forget_label[state='selectd']{
+    color:black;
+}
+
+#forget_label[state='hover'], #forget_label[state='selected_hoer'] {
+    color: rgb(42, 112, 241);
+}

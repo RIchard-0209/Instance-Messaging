@@ -60,3 +60,74 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 	}
 }
 
+bool MysqlDao::CheckEmail(const std::string& name, const std::string& email)
+{
+	auto conn = pool_->getConnection();
+	try {
+		if (conn == nullptr) {
+			pool_->returnConnection(std::move(conn));
+			return false;
+		}
+
+		// 准备查询语句
+		std::unique_ptr<sql::PreparedStatement> pstmt(conn->_conn->prepareStatement("SELECT email from user WHERE name = ?"));
+
+		// 绑定参数
+		pstmt->setString(1, name);
+
+		// 执行
+		std::unique_ptr<sql::ResultSet> res(pstmt->executeQuery());
+
+		while (res->next()) {
+			std::cout << "Check Email： " << res->getString("email") << std::endl;
+			if (email != res->getString("email")) {
+				pool_->returnConnection(std::move(conn));
+				return false;
+			}
+			pool_->returnConnection(std::move(conn));
+			return true;
+
+		}
+	}
+	catch (sql::SQLException& e) {
+		pool_->returnConnection(std::move(conn));
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return false;
+	}
+}
+
+bool MysqlDao::UpdatePwd(const std::string& name, const std::string& pwd)
+{
+	auto conn = pool_->getConnection();
+	try {
+		if (conn == nullptr) {
+			pool_->returnConnection(std::move(conn));
+			return false;
+		}
+
+		// 准备更新语句
+		std::unique_ptr<sql::PreparedStatement> pstmt(
+			conn->_conn->prepareStatement("UPDATE user SET pwd = ? where name = ?"));
+
+		// 绑定参数
+		pstmt->setString(1, pwd);
+		pstmt->setString(2, name);
+
+		// 执行
+		int updateCount = pstmt->executeUpdate();
+
+		std::cout << "Update rows: " << updateCount << std::endl;
+		pool_->returnConnection(std::move(conn));
+		return true;
+	}
+	catch (sql::SQLException& e) {
+		pool_->returnConnection(std::move(conn));
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return false;
+	}
+}
+
