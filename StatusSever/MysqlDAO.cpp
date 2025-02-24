@@ -27,7 +27,7 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 
 	try {
 		if (conn == nullptr) {
-		//	pool_->returnConnection(std::move(conn));
+			//	pool_->returnConnection(std::move(conn));
 			return 0;	// return false;
 		}
 
@@ -47,7 +47,7 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 
 		std::unique_ptr<sql::Statement> stmtRes(conn->_conn->createStatement());
 		std::unique_ptr<sql::ResultSet> res(stmtRes->executeQuery(query));
-		
+
 		if (res->next()) {
 			int result = res->getInt("result");
 			std::cout << "Result: " << result << std::endl;

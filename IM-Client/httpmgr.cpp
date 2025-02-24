@@ -22,6 +22,7 @@ void HttpMgr::PostHttpReq(QUrl url, QJsonObject json, ReqId req_id, Modules mod)
     // 触发回调之前这个Http Manager不能被删除，所以采用智能指针
     QObject::connect(reply, &QNetworkReply::finished, [self, reply, req_id, mod]() {
         // 处理错误
+        qDebug() << "reply->error() is " << reply->error();
         if (reply->error() != QNetworkReply::NoError) {
             qDebug() << reply->errorString();
             // 发送信号通知错误
@@ -46,5 +47,13 @@ void HttpMgr::slot_http_finish(ReqId id, QString res, ErrorCodes err, Modules mo
     if (mod == Modules::REGISTERMOD) {
         // 发送信号通知指定模块http的响应结束了
         emit sign_reg_mod_finish(id, res, err);
+    }
+    if(mod == Modules::RESETMOD){
+        //发送信号通知指定模块http响应结束
+        emit sign_reset_mod_finish(id, res, err);
+    }
+
+    if(mod == Modules::LOGINMOD){
+        emit sign_login_mod_finish(id, res, err);
     }
 }

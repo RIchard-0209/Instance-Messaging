@@ -35,28 +35,28 @@ RegisterDialog::RegisterDialog(QWidget *parent)
     initHttpHandlers();
     ui->err_tip->clear();
 
-    connect(ui->user_lineEdit,&QLineEdit::editingFinished,this,[this](){
+    connect(ui->user_lineEdit,&QLineEdit::textEdited,this,[this](){
         checkUserValid();
     });
 
-    connect(ui->mail_lineEdit, &QLineEdit::editingFinished, this, [this](){
+    connect(ui->mail_lineEdit, &QLineEdit::textEdited, this, [this](){
         checkEmailValid();
     });
 
-    connect(ui->psw_lineEdit, &QLineEdit::editingFinished, this, [this](){
+    connect(ui->psw_lineEdit, &QLineEdit::textEdited, this, [this](){
         checkPassValid();
     });
 
-    connect(ui->psw_lineEdit, &QLineEdit::editingFinished, this, [this]() {
+    connect(ui->psw_lineEdit, &QLineEdit::textEdited, this, [this]() {
         if (ui->psw_confirm_lineEdit->text().length() != 0)
             checkConfirmValid();
     });
 
-    connect(ui->psw_confirm_lineEdit, &QLineEdit::editingFinished, this, [this](){
+    connect(ui->psw_confirm_lineEdit, &QLineEdit::textEdited, this, [this](){
         checkConfirmValid();
     });
 
-    connect(ui->varify_lineEdit, &QLineEdit::editingFinished, this, [this](){
+    connect(ui->varify_lineEdit, &QLineEdit::textEdited, this, [this](){
         checkVarifyValid();
     });
 

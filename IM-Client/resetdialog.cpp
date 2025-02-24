@@ -13,25 +13,25 @@ ResetDialog::ResetDialog(QWidget *parent) :
     repolish(ui->err_tip);
     ui->err_tip->clear();
 
-    connect(ui->user_lineEdit,&QLineEdit::editingFinished,this,[this](){
+    connect(ui->user_lineEdit,&QLineEdit::textEdited,this,[this](){
         checkUserValid();
     });
 
-    connect(ui->email_lineEdit, &QLineEdit::editingFinished, this, [this](){
+    connect(ui->email_lineEdit, &QLineEdit::textEdited, this, [this](){
         checkEmailValid();
     });
 
-    connect(ui->psw_lineEdit, &QLineEdit::editingFinished, this, [this](){
+    connect(ui->psw_lineEdit, &QLineEdit::textEdited, this, [this](){
         checkPswValid();
     });
 
-    connect(ui->varify_lineEdit, &QLineEdit::editingFinished, this, [this](){
+    connect(ui->varify_lineEdit, &QLineEdit::textEdited, this, [this](){
          checkVarifyValid();
     });
 
     initHandlers();
 
-    connect(HttpMgr::GetInstance().get(), &HttpMgr::sig_reset_mod_finish, this,
+    connect(HttpMgr::GetInstance().get(), &HttpMgr::sign_reset_mod_finish, this,
             &ResetDialog::slot_reset_mod_finish);
 }
 

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{05666cd4-2a64-42f6-907c-2b79665458ed}</ProjectGuid>
-    <RootNamespace>GateServer</RootNamespace>
+    <ProjectGuid>{e589e59f-931d-4d58-a196-ff25b686e9fc}</ProjectGuid>
+    <RootNamespace>StatusSever</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -130,10 +130,6 @@
   <ItemGroup>
     <ClCompile Include="AsioIOServicePool.cpp" />
     <ClCompile Include="ConfigMgr.cpp" />
-    <ClCompile Include="CServer.cpp" />
-    <ClCompile Include="GateServer.cpp" />
-    <ClCompile Include="HttpConnection.cpp" />
-    <ClCompile Include="LogicSystem.cpp" />
     <ClCompile Include="message.grpc.pb.cc" />
     <ClCompile Include="message.pb.cc" />
     <ClCompile Include="MysqlDAO.cpp" />
@@ -142,15 +138,12 @@
     <ClCompile Include="RedisConPool.cpp" />
     <ClCompile Include="RedisMgr.cpp" />
     <ClCompile Include="StatusGrpcClient.cpp" />
-    <ClCompile Include="VerifyGrpcClient.cpp" />
+    <ClCompile Include="StatusServiceImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsioIOServicePool.h" />
     <ClInclude Include="ConfigMgr.h" />
     <ClInclude Include="const.h" />
-    <ClInclude Include="CServer.h" />
-    <ClInclude Include="HttpConnection.h" />
-    <ClInclude Include="LogicSystem.h" />
     <ClInclude Include="message.grpc.pb.h" />
     <ClInclude Include="message.pb.h" />
     <ClInclude Include="MysqlDAO.h" />
@@ -160,12 +153,11 @@
     <ClInclude Include="RedisMgr.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="StatusGrpcClient.h" />
-    <ClInclude Include="VerifyGrpcClient.h" />
+    <ClInclude Include="StatusServiceImpl.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />
     <None Include="message.proto" />
-    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
