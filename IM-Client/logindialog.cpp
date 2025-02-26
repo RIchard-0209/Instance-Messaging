@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include "httpmgr.h"
+#include "tcpmgr.h"
 
 LoginDialog::LoginDialog(QWidget *parent)
     : QDialog(parent)
@@ -34,9 +35,15 @@ LoginDialog::LoginDialog(QWidget *parent)
     });
 
     initHttpHandlers();
-    //连接登录回包信号
+    // 连接登录回包信号
     connect(HttpMgr::GetInstance().get(), &HttpMgr::sign_login_mod_finish, this,
             &LoginDialog::slot_login_mod_finish);
+    // 连接Tcp连接请求的信号和槽函数
+    connect(this, &LoginDialog::sign_connect_tcp, TCPMgr::GetInstance().get(), &TCPMgr::slot_tcp_connect);
+    // 连接TCPMgr发出的连接成功信号
+    connect(TCPMgr::GetInstance().get(), &TCPMgr::sign_conn_success, this, &LoginDialog::slot_tcp_conn_finish);
+    // 失败信号
+    connect(TCPMgr::GetInstance().get(), &TCPMgr::sign_login_failed, this, &LoginDialog::slot_login_failed);
 }
 
 LoginDialog::~LoginDialog()
@@ -85,6 +92,8 @@ void LoginDialog::on_login_btn_clicked()
     if (!checkUserValid()) return ;
     if (!checkPwdValid()) return ;
 
+    enableBtn(false);
+
     auto user = ui->user_lineEdit->text();
     auto pwd = ui->psw_lineEdit->text();
 
@@ -97,6 +106,35 @@ void LoginDialog::on_login_btn_clicked()
     HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_login"),
                                         jsonObj, ReqId::ID_LOGIN_USER, Modules::LOGINMOD);
 
+}
+
+void LoginDialog::slot_tcp_conn_finish(bool bsuccess)
+{
+    if (!bsuccess) {
+        showTip(tr("网络异常"), false);
+        enableBtn(true);
+        return ;
+    }
+
+    showTip("聊天服务器连接成功， 正在登录 ...", true);
+
+    QJsonObject jsonObj;
+    jsonObj["uid"] = _uid;
+    jsonObj["token"] = _token;
+
+    QJsonDocument doc(jsonObj);
+    QString jsonString = doc.toJson(QJsonDocument::Indented);
+
+    // 发送tcp请求给ChatServer
+    emit TCPMgr::GetInstance()->sign_send_data(ReqId::ID_CHAT_LOGIN, jsonString);
+}
+
+void LoginDialog::slot_login_failed(int err)
+{
+    QString result = QString ("登陆失败, er is %1").arg(err);
+
+    showTip(result, false);
+    enableBtn(true);
 }
 
 bool LoginDialog::checkUserValid()
@@ -160,6 +198,7 @@ void LoginDialog::initHttpHandlers()
         int error = jsonObj["error"].toInt();
         if(error != ErrorCodes::SUCCESS){
             showTip(tr("参数错误"),false);
+            enableBtn(true);
             return;
         }
 
@@ -176,6 +215,14 @@ void LoginDialog::initHttpHandlers()
                 << si.Host << " Port is " << si.Port << " Token is " << si.Token;
 
         showTip(tr("登录成功"), true);
-        qDebug()<< "user is " << user ;
+        emit sign_connect_tcp(si);
     });
 }
+
+void LoginDialog::enableBtn(bool enabled)
+{
+    ui->login_btn->setEnabled(enabled);
+    ui->reg_btn->setEnabled(enabled);
+}
+
+

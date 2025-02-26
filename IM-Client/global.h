@@ -29,6 +29,8 @@ enum ReqId {
     ID_REG_USER = 1002,
     ID_RESET_PWD = 1003,
     ID_LOGIN_USER = 1004,
+    ID_CHAT_LOGIN = 1005, //登陆聊天服务器
+    ID_CHAT_LOGIN_RSP= 1006, //登陆聊天服务器回包
 };
 
 enum Modules {
@@ -70,4 +72,34 @@ struct ServerInfo{
     int Uid;
 };
 
+enum class ChatRole
+{
+
+    Self,
+    Other
+};
+
+struct MsgInfo{
+    QString msgFlag;//"text,image,file"
+    QString content;//表示文件和图像的url,文本信息
+    QPixmap pixmap;//文件和图片的缩略图
+};
+
+//聊天界面几种模式
+enum ChatUIMode{
+    SearchMode, //搜索模式
+    ChatMode, //聊天模式
+};
+
+//自定义QListWidgetItem的几种类型
+enum ListItemType{
+    ChatUserItem, //聊天用户
+    ContactUserItem, //联系人用户
+    SearchUserItem, //搜索到的用户
+    AddUserTipItem, //提示添加用户
+    InvalidItem,  //不可点击条目
+};
+
+//申请好友标签输入框最低长度
+const int MIN_APPLY_LABEL_ED_LEN = 40;
 #endif // GLOBAL_H

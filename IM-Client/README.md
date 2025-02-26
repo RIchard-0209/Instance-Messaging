@@ -62,3 +62,8 @@ Widget::Widget(QWidget *parent)
 
 ```
 
+
+
+# TCP管理
+
+聊天服务要维持一个长链接，方便CS之间双向通信。那么需要一个TCPMgr来管理TCP的连接。实际上的网络模块一般以单例模式使用，
