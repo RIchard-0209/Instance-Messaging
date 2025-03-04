@@ -1,5 +1,5 @@
 #include "MySqlPool.h"
-#include "SQLStatement.h"
+
 
 #include <chrono>
 
@@ -56,7 +56,7 @@ void MySqlPool::checkConnection()
 
 		try {
 			std::unique_ptr<sql::Statement> stmt(conn->_conn->createStatement());
-			stmt->executeQuery(KEEP_ALIVE_QUERY);
+			stmt->executeQuery("SELECT 1");
 			conn->_last_time = time_stamp;
 			std::cout << "Execute timer alive query, cur is " << time_stamp << std::endl;
 

@@ -3,7 +3,7 @@
 #include "Singleton.h"
 #include "const.h"
 #include "CSession.h"
-#include "dataStruct.h"
+#include "data.h"
 
 #include <map>
 #include <functional>

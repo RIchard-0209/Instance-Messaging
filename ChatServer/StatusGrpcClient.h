@@ -8,7 +8,7 @@
 #include "message.pb.h"
 
 #include <queue>
-#include <condition_variable>
+#include <atomic>
 #include <mutex>
 
 using grpc::Channel;

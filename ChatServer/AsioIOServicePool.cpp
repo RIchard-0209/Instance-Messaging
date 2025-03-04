@@ -5,7 +5,7 @@ AsioIOServicePool::AsioIOServicePool(std::size_t size)
 {
 	for (std::size_t i = 0; i < size; ++i) {
 		_works[i] = std::unique_ptr<Work>(new Work(_ioServices[i].get_executor()));
-
+		// 为每个 io_service 创建一个 work 对象，然后将这个 work 对象存储在 _works 向量中
 		for (std::size_t i = 0; i < _ioServices.size(); ++i) {
 			_threads.emplace_back([this, i]() {
 				_ioServices[i].run();

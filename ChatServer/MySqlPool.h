@@ -9,7 +9,6 @@
 #include <thread>
 #include "const.h"
 #include "Singleton.h"
-#include "dataStruct.h"
 
 // Connector c++
 #include <jdbc/mysql_driver.h>
@@ -18,6 +17,7 @@
 #include <jdbc/cppconn/resultset.h>
 #include <jdbc/cppconn/statement.h>
 #include <jdbc/cppconn/exception.h>
+#include "data.h"
 
 class sqlConnection {
 public:

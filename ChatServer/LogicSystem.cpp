@@ -8,19 +8,28 @@
 #include <json/value.h>
 
 
-LogicSystem::LogicSystem() : _b_stop(false)
-{
+LogicSystem::LogicSystem() :_b_stop(false) {
 	RegisterCallBacks();
 	_worker_thread = std::thread(&LogicSystem::DealMsg, this);
 }
 
-LogicSystem::~LogicSystem()
-{
+LogicSystem::~LogicSystem() {
 	_b_stop = true;
 	_cv.notify_all();
 	_worker_thread.join();
 }
 
+void LogicSystem::PostMsgToQue(std::shared_ptr<LogicNode> msg)
+{
+	std::unique_lock<std::mutex> unique_lock(_mtx);
+	_msg_que.push(msg);
+
+	// 由0到1发送通知信号
+	if (_msg_que.size() == 1) {
+		unique_lock.unlock();
+		_cv.notify_one();
+	}
+}
 void LogicSystem::DealMsg()
 {
 	for (;;) {
@@ -37,7 +46,7 @@ void LogicSystem::DealMsg()
 				auto call_back_iter = _fun_callbacks.find(msg_node->_recvNode->_msg_id);
 				if (call_back_iter == _fun_callbacks.end()) {
 					_msg_que.pop();
-					return;
+					continue;
 				}
 
 				call_back_iter->second(
@@ -78,11 +87,13 @@ void LogicSystem::DealMsg()
 void LogicSystem::RegisterCallBacks()
 {
 
-	_fun_callbacks[MSG_CHAT_LOGIN] = [this](auto&& session, auto&& msg_id, auto&& msg_data) {
-		LoginHandler(std::forward<decltype(session)>(session),
-			std::forward<decltype(msg_id)>(msg_id),
-			std::forward<decltype(msg_data)>(msg_data));
-		};
+	//_fun_callbacks[MSG_CHAT_LOGIN] = [this](auto&& session, auto&& msg_id, auto&& msg_data) {
+	//	LoginHandler(std::forward<decltype(session)>(session),
+	//		std::forward<decltype(msg_id)>(msg_id),
+	//		std::forward<decltype(msg_data)>(msg_data));
+	//	};
+		_fun_callbacks[MSG_CHAT_LOGIN] = std::bind(&LogicSystem::LoginHandler, this,
+		std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 }
 
 void LogicSystem::LoginHandler(std::shared_ptr<CSession> session, const short& msg_id, const std::string& msg_data)
@@ -127,14 +138,3 @@ void LogicSystem::LoginHandler(std::shared_ptr<CSession> session, const short& m
 	rtvalue["name"] = user_info->name;
 }
 
-void LogicSystem::PostMsgToQue(std::shared_ptr<LogicNode> msg)
-{
-	std::unique_lock<std::mutex> unique_lock(_mtx);
-	_msg_que.push(msg);
-
-	// 由0到1发送通知信号
-	if (_msg_que.size() == 1) {
-		unique_lock.unlock();
-		_cv.notify_one();
-	}
-}

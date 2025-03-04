@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MySqlPool.h"
-#include "SQLStatement.h"
 
 #include <memory>
 #include <string>

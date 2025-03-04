@@ -48,6 +48,40 @@ void CSession::Close()
 	_b_close = true;
 }
 
+// 没有搞懂 2025-3-2
+void CSession::Send(std::string msg, short msg_id)
+{
+	std::lock_guard< std::mutex> lock(_send_mtx);
+	int send_que_size = _send_que.size();
+
+	if (send_que_size > MAX_SENDQUE) {
+		// 如果超过最多发送队列
+		std::cout << "Session: " << _uuid << " send que fulled, size is " << MAX_SENDQUE << std::endl;
+		return;
+	}
+
+	// 显式转换 msg.length() 为 short
+	_send_que.push(std::make_shared<SendNode>(
+		msg.c_str(),
+		(msg.length()),
+		msg_id
+	));
+
+	// 这个是做什么用的: 如果队列非空，说明已有异步操作在处理，直接返回
+	if (send_que_size > 0) return;
+
+	auto& msg_node = _send_que.front();
+	// boost::asio::async_write(
+	//	_socket,
+	//	boost::asio::buffer(msg_node->_data, msg_node->_total_len),
+	//	[this, self = sharedSelf(), msg_node](boost::system::error_code ec, std::size_t /*bytes_transferred*/) {
+	//		HandleWrite(ec, self);
+	//	});
+	boost::asio::async_write(_socket, boost::asio::buffer(msg_node->_data, msg_node->_total_len),
+		std::bind(&CSession::HandleWrite, this, std::placeholders::_1, sharedSelf()));
+}
+
+
 // 这两个send不能使用模板吗？ 2025-3-2
 // 一个使用string的函数，另一个是char*
 // 先把功能实现，再说吧
@@ -69,46 +103,18 @@ void CSession::Send(char* msg, short max_length, short msg_id)
 	if (send_que_size > 0) return;
 
 	auto& msg_node = _send_que.front();
-	boost::asio::async_write(
-		_socket,
-		boost::asio::buffer(msg_node->_data, msg_node->_total_len),
-		[this, self = sharedSelf(), msg_node](boost::system::error_code ec, std::size_t /*bytes_transferred*/) {
-			HandleWrite(ec, self);
-		}
-	);
+	//boost::asio::async_write(
+	//	_socket,
+	//	boost::asio::buffer(msg_node->_data, msg_node->_total_len),
+	//	[this, self = sharedSelf(), msg_node](boost::system::error_code ec, std::size_t /*bytes_transferred*/) {
+	//		HandleWrite(ec, self);
+	//	});
+	boost::asio::async_write(_socket, boost::asio::buffer(msg_node->_data, msg_node->_total_len),
+		std::bind(&CSession::HandleWrite, this, std::placeholders::_1, sharedSelf()));
 }
 
-// 没有搞懂 2025-3-2
-void CSession::Send(std::string msg, short msg_id)
-{
-	std::lock_guard< std::mutex> lock(_send_mtx);
-	int send_que_size = _send_que.size();
 
-	if (send_que_size > MAX_SENDQUE) {
-		// 如果超过最多发送队列
-		std::cout << "Session: " << _uuid << " send que fulled, size is " << MAX_SENDQUE << std::endl;
-		return;
-	}
 
-	// 显式转换 msg.length() 为 short
-	_send_que.push(std::make_shared<SendNode>(
-		msg.c_str(),
-		static_cast<short>(msg.length()),
-		msg_id
-	));
-
-	// 这个是做什么用的: 如果队列非空，说明已有异步操作在处理，直接返回
-	if (send_que_size > 0) return;
-
-	auto& msg_node = _send_que.front();
-	boost::asio::async_write(
-		_socket,
-		boost::asio::buffer(msg_node->_data, msg_node->_total_len),
-		[this, self = sharedSelf(), msg_node](boost::system::error_code ec, std::size_t /*bytes_transferred*/) {
-			HandleWrite(ec, self);
-		}
-	);
-}
 
 void CSession::AsyncReadBody(int total_len)
 {
@@ -231,17 +237,24 @@ void CSession::HandleWrite(
 			_send_que.pop();
 			if (!_send_que.empty()) {
 				auto& msg_node = _send_que.front();
-				boost::asio::async_write(
-					_socket,
-					boost::asio::buffer(msg_node->_data, msg_node->_total_len),
-					[this, self = sharedSelf(), msg_node](boost::system::error_code ec) {
-						HandleWrite(ec, self);
-					}
-				);
+				//boost::asio::async_write(
+				//	_socket,
+				//	boost::asio::buffer(msg_node->_data, msg_node->_total_len),
+				//	[this, self = sharedSelf(), msg_node](boost::system::error_code ec) {
+				//		HandleWrite(ec, self);
+				//	});
+				boost::asio::async_write(_socket, boost::asio::buffer(msg_node->_data, msg_node->_total_len),
+					std::bind(&CSession::HandleWrite, this, std::placeholders::_1, sharedSelf()));
+			}
+			else {
+				std::cout << "handle write failed, error is " << error.what() << std::endl;
+				Close();
+				_server->ClearSession(_uuid);
 			}
 		}
+
 	}
-	catch (std::exception e) {
+	catch (std::exception& e) {
 		std::cerr << "handle write failed, error is :" << e.what() << std::endl;
 		Close();
 		_server->ClearSession(_uuid);
@@ -259,17 +272,17 @@ void CSession::asyncReadFull(
 	asyncReadLen(0, maxLength, handler);
 }
 
+//读取指定字节数
 void CSession::asyncReadLen(
 	std::size_t read_len,
 	std::size_t total_len,
-	std::function<void(const boost::system::error_code&, std::size_t)> handler
-)
+	std::function<void(const boost::system::error_code&, std::size_t)> handler)
 {
 	auto self = sharedSelf();
 	_socket.async_read_some(
 		boost::asio::buffer(_data + read_len, total_len - read_len),
 		[read_len, total_len, handler, self](
-			const boost::system::error_code ec,
+			const boost::system::error_code& ec,
 			std::size_t bytesTransfered
 			) {
 				// 出现错误，调用回调函数

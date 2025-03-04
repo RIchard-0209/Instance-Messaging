@@ -1,5 +1,6 @@
 #include "MysqlDAO.h"
 #include "ConfigMgr.h"
+#include "SQLconstance.h"
 
 MysqlDao::MysqlDao()
 {
@@ -33,7 +34,7 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 
 
 		// 准备调用存储过程
-		std::unique_ptr<sql::PreparedStatement> stmt(conn->_conn->prepareStatement(CALL_REG_USER));
+		std::unique_ptr<sql::PreparedStatement> stmt(conn->_conn->prepareStatement(CALL_PROC_REG_USER));
 		stmt->setString(1, name);
 		stmt->setString(2, email);
 		stmt->setString(3, pwd);
@@ -45,7 +46,7 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 	   // 例如，如果存储过程设置了一个会话变量@result来存储输出结果，可以这样获取：
 
 		std::unique_ptr<sql::Statement> stmtRes(conn->_conn->createStatement());
-		std::unique_ptr<sql::ResultSet> res(stmtRes->executeQuery(REG_USER_QUERY));
+		std::unique_ptr<sql::ResultSet> res(stmtRes->executeQuery(PROC_REG_USER_QUERY));
 		
 		if (res->next()) {
 			int result = res->getInt("result");
@@ -185,7 +186,9 @@ bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd, UserInf
 std::shared_ptr<UserInfo> MysqlDao::GetUser(int uid)
 {
 	auto con = pool_->getConnection();
-	if (con == nullptr) return nullptr;
+	if (con == nullptr) {
+		return nullptr;
+	}
 
 	Defer defer([this, &con]() {
 		pool_->returnConnection(std::move(con));
@@ -210,7 +213,7 @@ std::shared_ptr<UserInfo> MysqlDao::GetUser(int uid)
 		}
 		return user_ptr;
 	}
-	catch (sql::SQLException e) {
+	catch (sql::SQLException& e) {
 		std::cerr << "SQLException: " << e.what();
 		std::cerr << " (MySQL error code: " << e.getErrorCode();
 		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
