@@ -17,6 +17,13 @@ struct SectionInfo {
 		_section_datas = other._section_datas;
 		return *this;
 	}
+	std::string GetValue(const std::string& key) {
+		if (_section_datas.find(key) == _section_datas.end()) {
+			return "";
+		}
+		// 这里可以添加一些边界检查  
+		return _section_datas[key];
+	}
 
 	std::map<std::string, std::string> _section_datas;
 	std::string operator[] (const std::string& key) {
@@ -62,6 +69,7 @@ public:
 		return *this;
 	}
 
+	std::string GetValue(const std::string& section, const std::string & key);
 private:
 	std::map<std::string, SectionInfo> _config_map;
 
