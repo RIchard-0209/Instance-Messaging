@@ -9,8 +9,7 @@
 #include <QObject>
 // 采用单例模式和可被分享类(防止对象被多次析构)，管理TCP连接
 class TCPMgr : public QObject, public Singleton<TCPMgr>,
-        public std::enable_shared_from_this<TCPMgr>
-{
+        public std::enable_shared_from_this<TCPMgr> {
     Q_OBJECT
 
 public:
