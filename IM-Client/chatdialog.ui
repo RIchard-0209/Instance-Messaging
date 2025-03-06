@@ -232,17 +232,17 @@
           <number>9</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="search_edit">
+          <widget class="CustomizeEdit" name="search_edit">
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>24</height>
+             <height>36</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>24</height>
+             <height>36</height>
             </size>
            </property>
           </widget>
@@ -613,6 +613,11 @@
    <class>ClickedLabel</class>
    <extends>QLabel</extends>
    <header>clickedlabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomizeEdit</class>
+   <extends>QLineEdit</extends>
+   <header>customizeedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

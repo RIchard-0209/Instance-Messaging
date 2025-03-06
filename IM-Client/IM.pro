@@ -9,9 +9,11 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    appsources.cpp \
     chatdialog.cpp \
     clickedbtn.cpp \
     clickedlabel.cpp \
+    customizeedit.cpp \
     global.cpp \
     httpmgr.cpp \
     logindialog.cpp \
@@ -26,9 +28,11 @@ SOURCES += \
     usermgr.cpp
 
 HEADERS += \
+    appsources.h \
     chatdialog.h \
     clickedbtn.h \
     clickedlabel.h \
+    customizeedit.h \
     global.h \
     httpmgr.h \
     logindialog.h \
