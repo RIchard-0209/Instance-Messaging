@@ -289,7 +289,7 @@
        <widget class="QListWidget" name="search_list"/>
       </item>
       <item>
-       <widget class="QListWidget" name="chat_user_list">
+       <widget class="ChatUserList" name="chat_user_list">
         <property name="minimumSize">
          <size>
           <width>250</width>
@@ -618,6 +618,11 @@
    <class>CustomizeEdit</class>
    <extends>QLineEdit</extends>
    <header>customizeedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ChatUserList</class>
+   <extends>QListWidget</extends>
+   <header>chatuserlist.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
