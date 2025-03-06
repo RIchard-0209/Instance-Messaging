@@ -6,16 +6,16 @@
 #include "logindialog.h"
 #include "registerdialog.h"
 #include "resetdialog.h"
+#include "chatdialog.h"
 /******************************************************************************
  *
  * @file       mainwindow.h
- * @brief      XXXX Function
+ * @brief      主功能界面 Function
  *
  * @author     2ein
  * @date       2025/02/17
  * @history
  *****************************************************************************/
-
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -36,11 +36,13 @@ public slots:
 //    void SlotSwitchLogFromReset();  // 从重置界面返回
     void SlotSwitchReg();
     void SlotSwitchResetPwd();
+    void SlotSwitchChat();
 
 private:
     Ui::MainWindow *ui;
     LoginDialog *_log_dlg;
     RegisterDialog* _reg_dlg;
     ResetDialog* _reset_dlg;
+    ChatDialog* _chat_dlg;
 };
 #endif // MAINWINDOW_H

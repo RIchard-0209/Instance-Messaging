@@ -51,3 +51,16 @@ QDialog#LoginDialog #RegisterDialog {
 #forget_label[state='hover'], #forget_label[state='selected_hoer'] {
     color: rgb(42, 112, 241);
 }
+
+#add_btn[state='normal'] {
+  border-image: url(:/src/img/add_friend_normal.png);
+}
+
+#add_btn[state='hover'] {
+  border-image: url(:/src/img/add_friend_hover.png);
+
+}
+
+#add_btn[state='press'] {
+  border-image: url(:/src/img/add_friend_hover.png);
+}

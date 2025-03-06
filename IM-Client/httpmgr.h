@@ -11,7 +11,7 @@
 
 // C++ CRTP
 class HttpMgr : public QObject,
-                public Sing1leton<HttpMgr>,
+                public Singleton<HttpMgr>,
                 public std::enable_shared_from_this<HttpMgr> {
   Q_OBJECT
 
