@@ -3,10 +3,11 @@
 
 #include <QMainWindow>
 
+#include "chatdialog.h"
 #include "logindialog.h"
 #include "registerdialog.h"
 #include "resetdialog.h"
-#include "chatdialog.h"
+
 /******************************************************************************
  *
  * @file       mainwindow.h
@@ -23,26 +24,25 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QMainWindow {
+  Q_OBJECT
 
-public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+ public:
+  MainWindow(QWidget* parent = nullptr);
+  ~MainWindow();
 
-public slots:
-    void SlotSwitchLog();
-//    void SlotSwitchLogFromReset();  // 从重置界面返回
-    void SlotSwitchReg();
-    void SlotSwitchResetPwd();
-    void SlotSwitchChat();
+ public slots:
+  void SlotSwitchLog();
+  //    void SlotSwitchLogFromReset();  // 从重置界面返回
+  void SlotSwitchReg();
+  void SlotSwitchResetPwd();
+  void SlotSwitchChat();
 
-private:
-    Ui::MainWindow *ui;
-    LoginDialog *_log_dlg;
-    RegisterDialog* _reg_dlg;
-    ResetDialog* _reset_dlg;
-    ChatDialog* _chat_dlg;
+ private:
+  Ui::MainWindow* ui;
+  LoginDialog* _log_dlg;
+  RegisterDialog* _reg_dlg;
+  ResetDialog* _reset_dlg;
+  ChatDialog* _chat_dlg;
 };
-#endif // MAINWINDOW_H
+#endif  // MAINWINDOW_H

@@ -52,22 +52,66 @@ ChatDialog::ChatDialog(QWidget* parent)
 
   /* 添加联系人界面 */
   addChatUserList();
+  showSearch(false);
+
+  /* 侧边栏 */
+  QPixmap pixmap(":/src/img/head_1.jpg");  // 加载图片
+  ui->side_head_lb->setPixmap(pixmap);  // 将图片设置到QLabel上
+  QPixmap scaledPixmap =
+      pixmap.scaled(ui->side_head_lb->size(),
+                    Qt::KeepAspectRatio);  // 将图片缩放到label的大小
+  ui->side_head_lb->setPixmap(scaledPixmap);  // 将缩放后的图片设置到QLabel上
+  ui->side_head_lb->setScaledContents(
+      true);  // 设置QLabel自动缩放图片内容以适应大小
+
+  ui->side_chat_lb->setProperty("state", "normal");
+
+  ui->side_chat_lb->SetState("normal", "hover", "pressed", "selected_normal",
+                             "selected_hover", "selected_pressed");
+
+  ui->side_contact_lb->SetState("normal", "hover", "pressed", "selected_normal",
+                                "selected_hover", "selected_pressed");
+
+
+  /* 标签 */
+
+  // 链接搜索框输入变化
+  connect(ui->search_edit, &QLineEdit::textChanged, this,
+          &ChatDialog::slot_text_changed);
 
   showSearch(false);
+
+  // 检测鼠标点击位置判断是否要清空搜索框
+  this->installEventFilter(this);  // 安装事件过滤器
+
+  // 设置聊天label选中状态
+  ui->side_chat_lb->SetSelected(true);
 }
 
 ChatDialog::~ChatDialog() { delete ui; }
 
 void ChatDialog::showSearch(bool b_search) {
-  if (b_search) {
+  if (bsearch) {
     ui->chat_user_list->hide();
-    // ui->con_user_list->hide();
+    ui->con_user_list->hide();
     ui->search_list->show();
     _mode = ChatUIMode::SearchMode;
-  } else {
+  } else if (_state == ChatUIMode::ChatMode) {
     ui->chat_user_list->show();
+    ui->con_user_list->hide();
     ui->search_list->hide();
     _mode = ChatUIMode::ChatMode;
+    ui->search_list->CloseFindDlg();
+    ui->search_edit->clear();
+    ui->search_edit->clearFocus();
+  } else if (_state == ChatUIMode::ContactMode) {
+    ui->chat_user_list->hide();
+    ui->search_list->hide();
+    ui->con_user_list->show();
+    _mode = ChatUIMode::ContactMode;
+    ui->search_list->CloseFindDlg();
+    ui->search_edit->clear();
+    ui->search_edit->clearFocus();
   }
 }
 
@@ -97,5 +141,30 @@ void ChatDialog::addChatUserList() {
     item->setSizeHint(chat_user_wid->sizeHint());
     ui->chat_user_list->addItem(item);
     ui->chat_user_list->setItemWidget(item, chat_user_wid);
+  }
+}
+
+bool ChatDialog::eventFilter(QObject* watched, QEvent* event) {
+  if (event->type() == QEvent::MouseButtonPress) {
+    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+    handleGlobalMousePress(mouseEvent);
+  }
+  return QDialog::eventFilter(watched, event);
+}
+
+void ChatDialog::handleGlobalMousePress(QMouseEvent* event) {
+  // 实现点击位置的判断和处理逻辑
+  // 先判断是否处于搜索模式，如果不处于搜索模式则直接返回
+  if (_mode != ChatUIMode::SearchMode) {
+    return;
+  }
+
+  // 将鼠标点击位置转换为搜索列表坐标系中的位置
+  QPoint posInSearchList = ui->search_list->mapFromGlobal(event->globalPos());
+  // 判断点击位置是否在聊天列表的范围内
+  if (!ui->search_list->rect().contains(posInSearchList)) {
+    // 如果不在聊天列表内，清空输入框
+    ui->search_edit->clear();
+    showSearch(false);
   }
 }

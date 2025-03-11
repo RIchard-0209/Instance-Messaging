@@ -19,6 +19,7 @@ class ClickedLabel : public QLabel {
 
   ClickLbState GetCurState();
   bool SetCurState(ClickLbState state);
+  void ResetNormalState();
 
  protected:
  private:

@@ -1,52 +1,53 @@
-//#ifndef STATEWIDGET_H
-//#define STATEWIDGET_H
+#ifndef STATEWIDGET_H
+#define STATEWIDGET_H
+#include <QLabel>
+#include <QWidget>
 
-//#include <QWidget>
-//#include <QLabel>
+#include "global.h"
 
-//class StateWidget : public QWidget {
-//  Q_OBJECT
-// public:
-//  explicit StateWidget(QWidget* parent = nullptr);
 
-//  void SetState(QString normal = "", QString hover = "", QString press = "",
-//                QString select = "", QString select_hover = "",
-//                QString select_press = "");
+class StateWidget : public QWidget {
+  Q_OBJECT
+ public:
+  explicit StateWidget(QWidget* parent = nullptr);
 
-//  ClickLbState GetCurState();
-//  void ClearState();
+  void SetState(QString normal = "", QString hover = "", QString press = "",
+                QString select = "", QString select_hover = "",
+                QString select_press = "");
 
-//  void SetSelected(bool bselected);
-//  void AddRedPoint();
-//  void ShowRedPoint(bool show = true);
+  ClickLbState GetCurState();
+  void ClearState();
 
-// protected:
-//  void paintEvent(QPaintEvent* event);
+  void SetSelected(bool bselected);
+  void AddRedPoint();
+  void ShowRedPoint(bool show = true);
 
-//  virtual void mousePressEvent(QMouseEvent* ev) override;
-//  virtual void mouseReleaseEvent(QMouseEvent* ev) override;
-//  virtual void enterEvent(QEvent* event) override;
-//  virtual void leaveEvent(QEvent* event) override;
+ protected:
+  void paintEvent(QPaintEvent* event);
 
-// private:
-//  QString _normal;
-//  QString _normal_hover;
-//  QString _normal_press;
+  virtual void mousePressEvent(QMouseEvent* ev) override;
+  virtual void mouseReleaseEvent(QMouseEvent* ev) override;
+  virtual void enterEvent(QEvent* event) override;
+  virtual void leaveEvent(QEvent* event) override;
 
-//  QString _selected;
-//  QString _selected_hover;
-//  QString _selected_press;
+ private:
+  QString _normal;
+  QString _normal_hover;
+  QString _normal_press;
 
-//  ClickLbState _curstate;
-//  QLabel* _red_point;
+  QString _selected;
+  QString _selected_hover;
+  QString _selected_press;
 
-// signals:
-//  void clicked(void);
+  ClickLbState _curstate;
+  QLabel* _red_point;
 
-// signals:
+ signals:
+  void clicked(void);
 
-// public slots:
-//};
-//};
+ signals:
 
-//#endif  // STATEWIDGET_H
+ public slots:
+};
+
+#endif  // STATEWIDGET_H

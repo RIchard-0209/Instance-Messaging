@@ -117,3 +117,9 @@ bool ClickedLabel::SetCurState(ClickLbState state) {
 
   return true;
 }
+
+void ClickedLabel::ResetNormalState() {
+  _curstate = ClickLbState::Normal;
+  setProperty("state", _normal);
+  repolish(this);
+}

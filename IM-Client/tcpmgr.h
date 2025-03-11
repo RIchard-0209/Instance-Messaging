@@ -8,7 +8,7 @@
 
 #include "global.h"
 #include "singleton.h"
-#include "userdata.cpp"
+#include "userdata.h"
 
 // 采用单例模式和可被分享类(防止对象被多次析构)，管理TCP连接
 class TCPMgr : public QObject,
@@ -25,9 +25,9 @@ class TCPMgr : public QObject,
   void sign_send_data(ReqId id, QString data);
   void sign_switch_chatdlg();
   void sign_login_failed(int err);
-//  void sign_load_apply_list(QJsonArray array);
-//  void sign_user_search(std::shared_ptr<SearchInfo>);
-//  void sign_friend_apply(std::shared_ptr<AddFriendApply>);
+ void sign_load_apply_list(QJsonArray array);
+ void sign_user_search(std::shared_ptr<SearchInfo>);
+ void sign_friend_apply(std::shared_ptr<AddFriendApply>);
 //  void sign_add_auth_friend(std::shared_ptr<AuthInfo>);
 //  void sign_auth_rsp(std::shared_ptr<AuthRsp>);
 

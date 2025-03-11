@@ -11,7 +11,9 @@ CONFIG += c++11
 SOURCES += \
     PictureBubble.cpp \
     TextBubble.cpp \
-    appsources.cpp \
+    adduseritem.cpp \
+    applyfriend.cpp \
+#    appsources.cpp \
     bubbleframe.cpp \
     chatdialog.cpp \
     chatitembase.cpp \
@@ -21,25 +23,32 @@ SOURCES += \
     chatview.cpp \
     clickedbtn.cpp \
     clickedlabel.cpp \
+    clickedoncelabel.cpp \
     customizeedit.cpp \
+    findsuccessdlg.cpp \
+    friendlabel.cpp \
     global.cpp \
     httpmgr.cpp \
     listitembase.cpp \
+    loadingdlg.cpp \
     logindialog.cpp \
     main.cpp \
     mainwindow.cpp \
     messagetextedit.cpp \
     registerdialog.cpp \
     resetdialog.cpp \
+    searchlist.cpp \
     statewidget.cpp \
     tcpmgr.cpp \
     timerbtn.cpp \
- #   userdata.cpp \
+    userdata.cpp \
     usermgr.cpp
 
 HEADERS += \
     PictureBubble.h \
     TextBubble.h \
+    adduseritem.h \
+    applyfriend.h \
     appsources.h \
     bubbleframe.h \
     chatdialog.h \
@@ -50,26 +59,36 @@ HEADERS += \
     chatview.h \
     clickedbtn.h \
     clickedlabel.h \
+    clickedoncelabel.h \
     customizeedit.h \
+    findsuccessdlg.h \
+    friendlabel.h \
     global.h \
     httpmgr.h \
     listitembase.h \
+    loadingdlg.h \
     logindialog.h \
     mainwindow.h \
     messagetextedit.h \
     registerdialog.h \
     resetdialog.h \
+    searchlist.h \
     singleton.h \
     statewidget.h \
     tcpmgr.h \
     timerbtn.h \
-#    userdata.h \
+    userdata.h \
     usermgr.h
 
 FORMS += \
+    adduseritem.ui \
+    applyfriend.ui \
     chatdialog.ui \
     chatpage.ui \
     chatuserwid.ui \
+    findsuccessdlg.ui \
+    friendlabel.ui \
+    loadingdlg.ui \
     logindialog.ui \
     mainwindow.ui \
     registerdialog.ui \
@@ -111,16 +130,38 @@ DISTFILES += \
 #     QMAKE_EXTRA_TARGETS += copydata
 # }
 
-win32:CONFIG(debug, debug | release)
-{
-    #指定要拷贝的文件目录为工程目录下release目录下的所有dll、lib文件，例如工程目录在D:\QT\Test
-    #PWD就为D:/QT/Test，DllFile = D:/QT/Test/release/*.dll
+#win32:CONFIG(debug, debug | release)
+#{
+#    #指定要拷贝的文件目录为工程目录下release目录下的所有dll、lib文件，例如工程目录在D:\QT\Test
+#    #PWD就为D:/QT/Test，DllFile = D:/QT/Test/release/*.dll
+#    TargetConfig = $${PWD}/config.ini
+#    #将输入目录中的"/"替换为"\"
+#    TargetConfig = $$replace(TargetConfig, /, \\)
+#    #将输出目录中的"/"替换为"\"
+#    OutputDir =  $${OUT_PWD}/$${DESTDIR}
+#    OutputDir = $$replace(OutputDir, /, \\)
+#    //执行copy命令
+#    QMAKE_POST_LINK += cp -f \"$$TargetConfig\" \"$$OutputDir\"
+#}
+
+CONFIG(debug, debug|release) {
+    message("debug mode")
     TargetConfig = $${PWD}/config.ini
-    #将输入目录中的"/"替换为"\"
-    TargetConfig = $$replace(TargetConfig, /, \\)
-    #将输出目录中的"/"替换为"\"
-    OutputDir =  $${OUT_PWD}/$${DESTDIR}
-    OutputDir = $$replace(OutputDir, /, \\)
-    //执行copy命令
+    OutputDir = $${OUT_PWD}/$${DESTDIR}
+    # 使用正斜杠，避免替换为反斜杠
+    QMAKE_POST_LINK += cp -f \"$$TargetConfig\" \"$$OutputDir\" &
+
+    StaticDir = $${PWD}/static
+    # 目标路径改为正斜杠，避免末尾反斜杠
+    QMAKE_POST_LINK += cp -rf \"$$StaticDir\" \"$$OutputDir/static\"
+} else {
+    message("release mode")
+    TargetConfig = $${PWD}/config.ini
+    OutputDir = $${OUT_PWD}/$${DESTDIR}
     QMAKE_POST_LINK += cp -f \"$$TargetConfig\" \"$$OutputDir\"
+
+    StaticDir = $${PWD}/static
+    QMAKE_POST_LINK += cp -rf \"$$StaticDir\" \"$$OutputDir/static\"
 }
+
+win32-mingw*:QMAKE_CXXFLAGS += /wd"4819" /utf-8
