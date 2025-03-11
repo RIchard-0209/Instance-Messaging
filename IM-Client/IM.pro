@@ -11,8 +11,10 @@ CONFIG += c++11
 SOURCES += \
     appsources.cpp \
     chatdialog.cpp \
+    chatpage.cpp \
     chatuserlist.cpp \
     chatuserwid.cpp \
+    chatview.cpp \
     clickedbtn.cpp \
     clickedlabel.cpp \
     customizeedit.cpp \
@@ -25,6 +27,7 @@ SOURCES += \
     messagetextedit.cpp \
     registerdialog.cpp \
     resetdialog.cpp \
+    statewidget.cpp \
     tcpmgr.cpp \
     timerbtn.cpp \
  #   userdata.cpp \
@@ -33,8 +36,10 @@ SOURCES += \
 HEADERS += \
     appsources.h \
     chatdialog.h \
+    chatpage.h \
     chatuserlist.h \
     chatuserwid.h \
+    chatview.h \
     clickedbtn.h \
     clickedlabel.h \
     customizeedit.h \
@@ -47,6 +52,7 @@ HEADERS += \
     registerdialog.h \
     resetdialog.h \
     singleton.h \
+    statewidget.h \
     tcpmgr.h \
     timerbtn.h \
 #    userdata.h \
@@ -54,6 +60,7 @@ HEADERS += \
 
 FORMS += \
     chatdialog.ui \
+    chatpage.ui \
     chatuserwid.ui \
     logindialog.ui \
     mainwindow.ui \

@@ -2,7 +2,7 @@
 #define LISTITEMBASE_H
 
 #include <QWidget>
-
+#include <QPaintEvent>
 #include "global.h"
 
 class ListItemBase : public QWidget {
@@ -12,7 +12,8 @@ class ListItemBase : public QWidget {
   void setItemType(ListItemType itemType);
 
   ListItemType getItemType();
-
+ protected:
+  void paintEvent(QPaintEvent* event) override;
  private:
   ListItemType _itemType;
 

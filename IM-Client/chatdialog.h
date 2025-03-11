@@ -4,7 +4,9 @@
 #include <QDialog>
 #include <QString>
 #include <vector>
+
 #include "global.h"
+
 
 namespace Ui {
 class ChatDialog;
@@ -20,13 +22,12 @@ class ChatDialog : public QDialog {
  private:
   void showSearch(bool b_search);
   void addChatUserList();
+
  private:
   Ui::ChatDialog *ui;
+  bool _b_loading;
   ChatUIMode _mode;
   // ChatUIMode _state;
-  bool _b_loading;
 };
-
-
 
 #endif  // CHATDIALOG_H
