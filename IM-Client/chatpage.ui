@@ -367,15 +367,15 @@
    <header>clickedlabel.h</header>
   </customwidget>
   <customwidget>
-   <class>MessageTextEdit</class>
-   <extends>QTextEdit</extends>
-   <header>MessageTextEdit.h</header>
-  </customwidget>
-  <customwidget>
    <class>ChatView</class>
    <extends>QWidget</extends>
    <header>chatview.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MessageTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>messagetextedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

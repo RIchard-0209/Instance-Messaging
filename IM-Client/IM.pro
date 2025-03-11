@@ -9,8 +9,12 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    PictureBubble.cpp \
+    TextBubble.cpp \
     appsources.cpp \
+    bubbleframe.cpp \
     chatdialog.cpp \
+    chatitembase.cpp \
     chatpage.cpp \
     chatuserlist.cpp \
     chatuserwid.cpp \
@@ -34,8 +38,12 @@ SOURCES += \
     usermgr.cpp
 
 HEADERS += \
+    PictureBubble.h \
+    TextBubble.h \
     appsources.h \
+    bubbleframe.h \
     chatdialog.h \
+    chatitembase.h \
     chatpage.h \
     chatuserlist.h \
     chatuserwid.h \
